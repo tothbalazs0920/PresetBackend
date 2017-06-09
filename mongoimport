@@ -1,0 +1,1 @@
+mongoimport --db presets --collection presets --drop --file c:\liberation\presets\server\presetMocks.json

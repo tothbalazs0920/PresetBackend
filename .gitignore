@@ -1,0 +1,8 @@
+env.json
+.idea/
+/node_modules
+/bower_components
+/build
+npm-debug.log
+.env
+/.vscode
