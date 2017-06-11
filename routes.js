@@ -30,7 +30,9 @@ module.exports = function (app) {
             .then(
             result => {
                 return res.json(result);
-            });
+            }).catch(error => console.log(error));
+
+            
     });
 
     app.get('/api/preset/:id', (req, res) => {
