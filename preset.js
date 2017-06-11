@@ -30,11 +30,16 @@ var presetSchema = new Schema({
   email: { type:String, es_indexed:true },
 });
 
+if(process.env.NODE_ENV === 'development') {
 presetSchema.plugin(mongoosastic,{
   hosts: process.env.ELASTICSEARCH_URL,
   auth: process.env.ELASTICSEARCH_AUTH
 });
-
+} else {
+  presetSchema.plugin(mongoosastic,{
+  hosts: process.env.BONSAI_URL,
+});
+}
 var Preset = mongoose.model('Presets', presetSchema);
 
 Preset.createMapping(function(err, mapping){
