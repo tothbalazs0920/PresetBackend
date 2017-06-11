@@ -36,6 +36,7 @@ presetSchema.plugin(mongoosastic,{
   auth: process.env.ELASTICSEARCH_AUTH
 });
 } else {
+  console.log('conncet to Bonsai');
   presetSchema.plugin(mongoosastic,{
   hosts: process.env.BONSAI_URL,
 });
