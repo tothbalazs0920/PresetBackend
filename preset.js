@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'development') {
     auth: process.env.ELASTICSEARCH_AUTH
   });
 } else {
-  var url = new URL(process.env.BONSAI_URL);
+  var url = URL.parse(process.env.BONSAI_URL);
   console.log('conncet to Bonsai');
   console.log('url.host:', url.host);
   console.log('url.port:', url.port);
