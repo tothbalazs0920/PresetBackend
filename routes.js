@@ -79,23 +79,23 @@ module.exports = function (app) {
     });
 
     app.get('/auth/google', passport.authenticate('google', {
-        failureRedirect: 'http://localhost:4200/login',
+        failureRedirect: process.env.FRONTEND_URL,
         scope: [
             'https://www.googleapis.com/auth/plus.login',
             'https://www.googleapis.com/auth/plus.profile.emails.read'
         ]
     }), function (req, res) {
-        res.redirect('http://localhost:4200/presets?token=' + '');
+        res.redirect(process.env.FRONTEND_URL + '/presets?token=' + '');
     });
 
     // handle google callback
     app.get('/auth/google/callback', passport.authenticate('google', {
-        failureRedirect: 'http://localhost:4200/login'
+        failureRedirect: process.env.FRONTEND_URL
     }),
         function (req, res) {
             var payload = { email: req.user.email };
             var token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
-            res.redirect('http://localhost:4200/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
+            res.redirect(process.env.FRONTEND_URL + '/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
         });
 
 }

@@ -21,7 +21,7 @@ passport.deserializeUser(function deserialize(obj, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:3001/auth/google/callback'
+    callbackURL: process.env.API_ROOT + '/auth/google/callback'
 },
     function (request, accessToken, refreshToken, profile, done) {
         return userController.getUser(profile.email)
