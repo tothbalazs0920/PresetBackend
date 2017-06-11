@@ -25,6 +25,6 @@ routes(app);
 const presetDao = require("./presetDao");
 presetDao.gridFsEndpoints(app);
 
-app.listen(3001);
+app.listen(process.env.PORT  || 3001);
 console.log('Listening on localhost:3001');
 console.log(process.env.NODE_ENV);
