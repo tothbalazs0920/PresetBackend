@@ -31,7 +31,7 @@ var presetSchema = new Schema({
 });
 
 presetSchema.plugin(mongoosastic,{
-  //host: 'localhost:9200',
+  hosts: process.env.ELASTICSEARCH_URL,
   auth: process.env.ELASTICSEARCH_AUTH
 });
 
