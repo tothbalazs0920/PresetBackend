@@ -31,23 +31,14 @@ var presetSchema = new Schema({
   email: { type: String, es_indexed: true },
 });
 
-if (process.env.NODE_ENV === 'development') {
-  presetSchema.plugin(mongoosastic, {
-    hosts: process.env.ELASTICSEARCH_URL,
-    auth: process.env.ELASTICSEARCH_AUTH
-  });
-} else {
   var url = URL.parse(process.env.BONSAI_URL);
   console.log('conncet to Bonsai');
   console.log('url.host:', url.host);
-  console.log('url.port:', url.port);
-  console.log('url.auth:', url.auth);
   presetSchema.plugin(mongoosastic, {
-    host: url.host,
-    port: url.port,
+    hosts: url.host,
     auth: url.auth
   });
-}
+
 var Preset = mongoose.model('Presets', presetSchema);
 
 Preset.createMapping(function (err, mapping) {
