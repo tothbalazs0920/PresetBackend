@@ -38,7 +38,7 @@ presetSchema.plugin(mongoosastic,{
 } else {
   console.log('conncet to Bonsai');
   presetSchema.plugin(mongoosastic,{
-  hosts: process.env.BONSAI_URL,
+  host: process.env.BONSAI_URL,
 });
 }
 var Preset = mongoose.model('Presets', presetSchema);
