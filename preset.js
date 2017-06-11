@@ -35,7 +35,7 @@ var presetSchema = new Schema({
   console.log('conncet to Bonsai');
   console.log('url.host:', url.host);
   presetSchema.plugin(mongoosastic, {
-    hosts: url.host,
+    host: url.host,
     auth: url.auth
   });
 
