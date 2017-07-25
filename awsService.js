@@ -34,7 +34,30 @@ module.exports.getPresignedUrl = function (fileName, fileType, mp3, operation) {
             else {
                 resolve(data);
             }
-        })
+        });
     });
+}
+module.exports.deleteObject = function (id, mp3) {
+    const s3 = new aws.S3();
+    const bucket = getBucketName(mp3);
+    const s3Params = {
+        Bucket: bucket,
+        Delete: {
+            Objects: [
+                { Key: id }
+            ],
+        },
+    };
 
+    return new Promise((resolve, reject) => {
+        s3.deleteObjects(s3Params, (err, data) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            }
+            else {
+                resolve(data);
+            }
+        });
+    });
 }

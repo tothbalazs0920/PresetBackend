@@ -34,7 +34,7 @@ var presetSchema = new Schema({
   var url = URL.parse(process.env.BONSAI_URL);
   console.log('url.host:', url.host);
   presetSchema.plugin(mongoosastic, {
-    hosts: url.host,
+    host: url.host,
     auth: url.auth
   });
 

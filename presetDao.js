@@ -45,7 +45,10 @@ module.exports.savePreset = function (presetInstance) {
 }
 
 module.exports.deletePreset = function (id) {
-    return Preset.findOne({ '_id': id }).remove().exec();
+    return Preset.findOne({ '_id': id }).exec()
+    .then((preset) => {
+       return preset.remove();
+    });
 }
 
 module.exports.findUser = function (email) {
