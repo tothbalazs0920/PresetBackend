@@ -33,8 +33,8 @@ module.exports.getPresetsByEmail = function (email) {
 
 var populatePreset = function (
     preset, id, name, description, technology, email, presetAuthor, profilePicture,
-     audioFileId, originalAudoFileName, presetId, originalPerestFileName,
-     amp, cabinet, author, album, songTitle) {
+    audioFileId, originalAudoFileName, presetId, originalPerestFileName,
+    amp, cabinet, author, album, songTitle) {
     preset.name = name;
     preset.description = description;
     preset.technology = technology;
@@ -55,18 +55,17 @@ var populatePreset = function (
 }
 
 module.exports.updatePreset = function (id, name, description, technology, email, presetAuthor, profilePicture,
- audioFileId, originalAudioFileName, presetId, originalPresetFileName,
- amp, cabinet, author, album, songTitle) {
+    audioFileId, originalAudioFileName, presetId, originalPresetFileName,
+    amp, cabinet, author, album, songTitle) {
     var presetInstance = new Preset();
     return presetDao.findPresetsById(id)
-        .then(
-        result => {
+        .then( result => {
             if (result) {
                 presetInstance = result;
             }
             presetInstance = populatePreset(presetInstance, id, name, description, technology, email, presetAuthor, profilePicture,
-             audioFileId, originalAudioFileName, presetId, originalPresetFileName,
-             amp, cabinet, author, album, songTitle);
+                audioFileId, originalAudioFileName, presetId, originalPresetFileName,
+                amp, cabinet, author, album, songTitle);
             return presetDao.savePreset(presetInstance);
         }).then(
         result => {
@@ -78,8 +77,7 @@ module.exports.updatePreset = function (id, name, description, technology, email
 
 module.exports.deletePreset = function (id) {
     return presetDao.deletePreset(id)
-        .then(
-        result => {
+        .then( result => {
             return result;
         }
         ).catch(

@@ -4,13 +4,6 @@ mongoose.connect(process.env.MONGODB_URI);
 var conn = mongoose.connection;
 mongoose.Promise = global.Promise;
 
-const fs = require('fs');
-const multer = require('multer');
-var GridFsStorage = require('multer-gridfs-storage');
-var Grid = require('gridfs-stream');
-Grid.mongo = mongoose.mongo;
-var gfs = Grid(conn.db);
-
 var Preset = require('./preset');
 var User = require('./user');
 var ObjectID = require('mongodb').ObjectID;
