@@ -10,10 +10,16 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader();
 jwtOptions.secretOrKey = process.env.JWTOPTIONS_SECRET;
 var authentication = require('./authentication');
 var passport = authentication.getPassport();
+const aws = require('aws-sdk');
+
+aws.config.update({
+    accessKeyId: process.env.AWSAccessKeyId,
+    secretAccessKey: process.env.AWSSecretKey,
+    region: "eu-west-1"
+});
 
 module.exports = function (app) {
     app.use(passport.initialize());
-
 
     app.get('/api/health-check', (req, res) => {
         return res.json('Ok');
@@ -31,8 +37,6 @@ module.exports = function (app) {
             result => {
                 return res.json(result);
             }).catch(error => console.log(error));
-
-            
     });
 
     app.get('/api/preset/:id', (req, res) => {
@@ -97,6 +101,48 @@ module.exports = function (app) {
             var token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
             res.redirect(process.env.FRONTEND_URL + '/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
         });
+
+    app.get('/api/sign-s3', (req, res) => {
+        const s3 = new aws.S3();
+        const fileName = req.query['file-name'];
+        const fileType = req.query['file-type'];
+        const mp3 = req.query['mp3'];
+        /*
+        if (fileType !== 'audio/mp3') {
+            res.status(400).send('file-type must be mp3');
+            res.end();
+        }
+        */
+        const bucket = getBucketName(mp3);
+        console.log('bucket', bucket);
+        const s3Params = {
+            Bucket: bucket,
+            Key: fileName,
+            Expires: 600,
+            ContentType: fileType,
+            ACL: 'public-read'
+        };
+
+        s3.getSignedUrl('putObject', s3Params, (err, data) => {
+            if (err) {
+                console.log(err);
+                return res.end();
+            }
+            const returnData = {
+                signedRequest: data,
+                url: `https://${process.env.S3_BUCKET_MP3}.s3.amazonaws.com/${fileName}`
+            };
+            res.write(JSON.stringify(returnData));
+            res.end();
+        });
+    });
+
+    const getBucketName = function (mp3) {
+        if (mp3 === 'true') {
+            return process.env.S3_BUCKET_MP3;
+        }
+        return process.env.S3_BUCKET_PRESET;
+    };
 
 }
 /*
