@@ -86,15 +86,3 @@ module.exports.deletePreset = function (id) {
         err => console.log(err)
         );
 }
-
-/*
-module.exports.searchPresets = function (terms) {
-    return presetDao.searchPresets(terms)
-        .then(
-        presets => {
-            return presets;
-        }).catch(
-        err => console.log(err)
-        );
-}
-*/
