@@ -1,6 +1,7 @@
 var presetDao = require('./presetDao');
 var Preset = require('./preset');
 var mongoose = require('mongoose');
+const awsService = require('./awsService');
 
 module.exports.getAllPresets = function (callback) {
     presetDao.findAll(callback);
@@ -59,7 +60,7 @@ module.exports.updatePreset = function (id, name, description, technology, email
     amp, cabinet, author, album, songTitle) {
     var presetInstance = new Preset();
     return presetDao.findPresetsById(id)
-        .then( result => {
+        .then(result => {
             if (result) {
                 presetInstance = result;
             }
@@ -76,11 +77,20 @@ module.exports.updatePreset = function (id, name, description, technology, email
 }
 
 module.exports.deletePreset = function (id) {
-    return presetDao.deletePreset(id)
-        .then( result => {
+    return presetDao.findPresetsById(id)
+        .then(preset => {
+            if (preset.audioFileId) {
+                return awsService.deleteObject(preset.audioFileId, 'true');
+            }
+            return new Promise((resolve, reject) => {
+                resolve('');
+            });
+        }).then(() => {
+            return presetDao.deletePreset(id);
+        }).then(result => {
             return result;
         }
         ).catch(
         err => console.log(err)
         );
-}
+};
