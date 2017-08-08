@@ -90,7 +90,7 @@ module.exports.gridFsEndpoints = function (app) {
         let page;
 
         if (params.page > 0) {
-            page = params.page - 1;
+            page = (params.page - 1) * perPage;
         } else {
             page = 0;
         }
