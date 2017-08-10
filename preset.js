@@ -28,6 +28,8 @@ var presetSchema = new Schema({
   currency: String,
   audioFileId: { type: String, es_indexed: true },
   originalAudoFileName: { type: String, es_indexed: true },
+  imageFileId: { type: String, es_indexed: true },
+  originalImageFileName: { type: String, es_indexed: true },
   email: { type: String, es_indexed: true },
 });
 

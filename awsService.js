@@ -8,8 +8,10 @@ aws.config.update({
 });
 
 const getBucketName = function (mp3) {
-    if (mp3 === 'true') {
+    if (mp3 === 'mp3') {
         return process.env.S3_BUCKET_MP3;
+    } else if (mp3 === 'image') {
+        return process.env.S3_BUCKET_IMAGES;
     }
     return process.env.S3_BUCKET_PRESET;
 };
