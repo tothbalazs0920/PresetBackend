@@ -45,7 +45,8 @@ module.exports = function (app) {
         presetController.updatePreset(
             req.body._id, req.body.name, req.body.description, req.body.technology, req.user.email, req.user.name, req.user.picture,
             req.body.audioFileId, req.body.originalAudoFileName, req.body.presetId, req.body.originalPerestFileName,
-            req.body.amp, req.body.cabinet, req.body.author, req.body.album, req.body.songTitle, req.body.imageFileId, req.body.originalImageFileName)
+            req.body.amp, req.body.cabinet, req.body.author, req.body.album, req.body.songTitle, req.body.imageFileId, req.body.originalImageFileName,
+            req.body.youtubeUrl)
             .then(
             result => {
                 return res.json(result);
@@ -107,11 +108,11 @@ module.exports = function (app) {
             res.end();
         }
         */
-       awsService.getPresignedUrl(fileName, fileType, mp3, operation)
-       .then((signedRequest) => {
-            res.write(JSON.stringify({signedRequest: signedRequest}));
-            res.end();
-       });
+        awsService.getPresignedUrl(fileName, fileType, mp3, operation)
+            .then((signedRequest) => {
+                res.write(JSON.stringify({ signedRequest: signedRequest }));
+                res.end();
+            });
     });
 
 }

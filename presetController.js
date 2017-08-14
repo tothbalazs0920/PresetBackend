@@ -35,7 +35,7 @@ module.exports.getPresetsByEmail = function (email) {
 var populatePreset = function (
     preset, id, name, description, technology, email, presetAuthor, profilePicture,
     audioFileId, originalAudoFileName, presetId, originalPerestFileName,
-    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName) {
+    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl) {
     preset.name = name;
     preset.description = description;
     preset.technology = technology;
@@ -54,12 +54,13 @@ var populatePreset = function (
     preset.songTitle = songTitle;
     preset.imageFileId = imageFileId;
     preset.originalImageFileName = originalImageFileName;
+    preset.youtubeUrl = youtubeUrl;
     return preset;
 }
 
 module.exports.updatePreset = function (id, name, description, technology, email, presetAuthor, profilePicture,
     audioFileId, originalAudioFileName, presetId, originalPresetFileName,
-    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName) {
+    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl) {
     var presetInstance = new Preset();
     return presetDao.findPresetsById(id)
         .then(result => {
@@ -68,7 +69,7 @@ module.exports.updatePreset = function (id, name, description, technology, email
             }
             presetInstance = populatePreset(presetInstance, id, name, description, technology, email, presetAuthor, profilePicture,
                 audioFileId, originalAudioFileName, presetId, originalPresetFileName,
-                amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName);
+                amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl);
             return presetDao.savePreset(presetInstance);
         }).then(
         result => {

@@ -12,7 +12,10 @@ var presetSchema = new Schema({
   numberOfDownLoads: Number,
   amp: { type: String, es_indexed: true },
   cabinet: { type: String, es_indexed: true },
-  michrophones: { type: Array, "default": [] },
+  ampChannel: {type: String},
+  pickupType: {type: String},
+  michrophone: {type: String },
+  michrophonePosition: {type: String },
   presetAuthor: { type: String, es_indexed: true },
   lead: Boolean,
   clean: Boolean,
@@ -22,7 +25,6 @@ var presetSchema = new Schema({
   songTitle: { type: String, es_indexed: true },
   presetId: { type: String, es_indexed: true },
   originalPerestFileName: { type: String, es_indexed: true },
-  img: String,
   profilePicture: { type: String, es_indexed: true },
   price: Number,
   currency: String,
@@ -31,12 +33,13 @@ var presetSchema = new Schema({
   imageFileId: { type: String, es_indexed: true },
   originalImageFileName: { type: String, es_indexed: true },
   email: { type: String, es_indexed: true },
+  youtubeUrl: { type: String, es_indexed: true }
 });
 
   var url = URL.parse(process.env.BONSAI_URL);
   console.log('url.host:', url.host);
   presetSchema.plugin(mongoosastic, {
-    host: url.host,
+    hosts: url.host,
     auth: url.auth
   });
 
