@@ -35,7 +35,8 @@ module.exports.getPresetsByEmail = function (email) {
 var populatePreset = function (
     preset, id, name, description, technology, email, presetAuthor, profilePicture,
     audioFileId, originalAudoFileName, presetId, originalPerestFileName,
-    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl) {
+    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl,
+    ampChannel, pickupType, michrophonePosition) {
     preset.name = name;
     preset.description = description;
     preset.technology = technology;
@@ -55,12 +56,16 @@ var populatePreset = function (
     preset.imageFileId = imageFileId;
     preset.originalImageFileName = originalImageFileName;
     preset.youtubeUrl = youtubeUrl;
+    preset.ampChannel = ampChannel;
+    preset.pickupType = pickupType;
+    preset.michrophonePosition = michrophonePosition;
     return preset;
 }
 
 module.exports.updatePreset = function (id, name, description, technology, email, presetAuthor, profilePicture,
     audioFileId, originalAudioFileName, presetId, originalPresetFileName,
-    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl) {
+    amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl,
+    ampChannel, pickupType, michrophonePosition) {
     var presetInstance = new Preset();
     return presetDao.findPresetsById(id)
         .then(result => {
@@ -69,7 +74,8 @@ module.exports.updatePreset = function (id, name, description, technology, email
             }
             presetInstance = populatePreset(presetInstance, id, name, description, technology, email, presetAuthor, profilePicture,
                 audioFileId, originalAudioFileName, presetId, originalPresetFileName,
-                amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl);
+                amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl,
+                ampChannel, pickupType, michrophonePosition);
             return presetDao.savePreset(presetInstance);
         }).then(
         result => {
