@@ -7,6 +7,8 @@ var JwtStrategy = passportJWT.Strategy;
 var jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader();
 jwtOptions.secretOrKey = process.env.JWTOPTIONS_SECRET;
+const Amplitude = require('amplitude');
+let amplitude = new Amplitude(process.env.amplitudeApiKey);
 
 var userController = require("./userController");
 
@@ -27,6 +29,11 @@ passport.use(new GoogleStrategy({
         return userController.getUser(profile.email)
             .then(function (user) {
                 if (user !== null) {
+                    let data = {
+                        eventType: 'login',
+                        userId: user.email,
+                    };
+                    amplitude.track(data);
                     done(null, user);
                     return;
                 } else {

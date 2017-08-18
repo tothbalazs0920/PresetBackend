@@ -1,17 +1,18 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var presetSchema = new Schema({
+var userSchema = new Schema({
   email: String,
-  use_id: Number,
+  oauthID: String,
   name: String,
   picture: String,
   given_name: String,
   family_name: String,
   nickname: String,
+  created: Date,
   presetsIds: { type : Array , "default" : [] },
 });
 
-var Preset = mongoose.model('User', presetSchema);
+let user = mongoose.model('User', userSchema);
 
-module.exports = Preset;
+module.exports = user;

@@ -1,4 +1,6 @@
 var presetDao = require('./presetDao');
+const Amplitude = require('amplitude');
+let amplitude = new Amplitude(process.env.amplitudeApiKey);
 
 module.exports.getUser = function (email) {
     return presetDao.findUser(email)
@@ -15,6 +17,11 @@ module.exports.saveUser = function (oauthID, email, name, picture) {
     return presetDao.saveUser(oauthID, email, name, picture)
         .then(
         result => {
+            let data = {
+                eventType: 'signup',
+                userId: email,
+            };
+            amplitude.track(data);
             return result;
         }
         ).catch(
