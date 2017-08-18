@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 let URL = require('url');
 
 var presetSchema = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
+  _id: { type: mongoose.Schema.Types.ObjectId, es_indexed: true},
   name: { type: String, es_indexed: true },
   technology: { type: String, es_indexed: true },
   description: { type: String, es_indexed: true },

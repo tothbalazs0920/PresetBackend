@@ -46,7 +46,7 @@ module.exports = function (app) {
             req.body._id, req.body.name, req.body.description, req.body.technology, req.user.email, req.user.name, req.user.picture,
             req.body.audioFileId, req.body.originalAudoFileName, req.body.presetId, req.body.originalPerestFileName,
             req.body.amp, req.body.cabinet, req.body.author, req.body.album, req.body.songTitle, req.body.imageFileId, req.body.originalImageFileName,
-            req.body.youtubeUrl, ampChannel, pickupType, michrophonePosition)
+            req.body.youtubeUrl, req.body.ampChannel, req.body.pickupType, req.body.michrophonePosition)
             .then(
             result => {
                 return res.json(result);
