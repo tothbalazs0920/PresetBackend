@@ -33,7 +33,8 @@ var presetSchema = new Schema({
   imageFileId: { type: String, es_indexed: true },
   originalImageFileName: { type: String, es_indexed: true },
   email: { type: String, es_indexed: true },
-  youtubeUrl: { type: String, es_indexed: true }
+  youtubeUrl: { type: String, es_indexed: true },
+  created: { type: Date, es_indexed: true }
 });
 
   var url = URL.parse(process.env.BONSAI_URL);

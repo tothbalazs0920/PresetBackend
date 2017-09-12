@@ -11,6 +11,7 @@ var userSchema = new Schema({
   created: Date,
   language: String, 
   gender: String,
+  created: Date,
   presetsIds: { type : Array , "default" : [] }
 });
 
