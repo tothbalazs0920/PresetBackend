@@ -6,11 +6,12 @@ var userSchema = new Schema({
   oauthID: String,
   name: String,
   picture: String,
-  given_name: String,
-  family_name: String,
-  nickname: String,
+  givenName: String,
+  familyName: String,
   created: Date,
-  presetsIds: { type : Array , "default" : [] },
+  language: String, 
+  gender: String,
+  presetsIds: { type : Array , "default" : [] }
 });
 
 let user = mongoose.model('User', userSchema);

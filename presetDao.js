@@ -46,9 +46,9 @@ module.exports.savePreset = function (presetInstance) {
 
 module.exports.deletePreset = function (id) {
     return Preset.findOne({ '_id': id }).exec()
-    .then((preset) => {
-       return preset.remove();
-    });
+        .then((preset) => {
+            return preset.remove();
+        });
 }
 
 module.exports.findUser = function (email) {
@@ -56,12 +56,16 @@ module.exports.findUser = function (email) {
     return query.exec();
 }
 
-module.exports.saveUser = function (oauthID, email, name, picture) {
+module.exports.saveUser = function (oauthID, email, name, picture, familyName, givenName, language, gender) {
     user = new User({
         oauthID: oauthID,
         email: email,
         name: name,
         picture: picture,
+        givenName: givenName,
+        familyName: familyName,
+        language: language,
+        gender: gender,
         created: Date.now()
     });
     return user.save();

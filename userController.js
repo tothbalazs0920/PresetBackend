@@ -13,8 +13,8 @@ module.exports.getUser = function (email) {
         );
 }
 
-module.exports.saveUser = function (oauthID, email, name, picture) {
-    return presetDao.saveUser(oauthID, email, name, picture)
+module.exports.saveUser = function (oauthID, email, name, picture, familyName, givenName, language, gender) {
+    return presetDao.saveUser(oauthID, email, name, picture, familyName, givenName, language, gender)
         .then(
         result => {
             let data = {

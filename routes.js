@@ -116,32 +116,3 @@ module.exports = function (app) {
     });
 
 }
-/*
-app.post('/api/user', (req, res) => {
-  User.findOne({ 'email': req.body.email }, function (err, found) {
-    if (err) {
-      throw err;
-    }
-    if (found) {
-      res.status(204).send();
-      return;
-    } else {
-      var userInstance = new User();
-      userInstance.email = req.body.email;
-      userInstance.user_id = req.body.user_id;
-      userInstance.name = req.body.name;
-      userInstance.picture = req.body.picture;
-      userInstance.given_name = req.body.given_name;
-      userInstance.family_name = req.body.family_name;
-      userInstance.nickname = req.body.nickname;
-
-      userInstance.save(function (err) {
-        if (err) {
-          res.status(500).send();
-        }
-        res.status(204).send();
-      });
-    }
-  });
-});
-*/

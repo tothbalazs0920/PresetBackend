@@ -37,7 +37,8 @@ passport.use(new GoogleStrategy({
                     done(null, user);
                     return;
                 } else {
-                    return userController.saveUser(profile.id, profile.email, profile.displayName, profile.photos[0].value);
+                    console.log('profile', profile);
+                    return userController.saveUser(profile.id, profile.email, profile.displayName, profile.photos[0].value, profile.name.familyName, profile.name.givenName, profile.language, profile.gender);
                 }
             })
             .then(function (result) {
