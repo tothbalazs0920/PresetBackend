@@ -9,6 +9,7 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeader();
 jwtOptions.secretOrKey = process.env.JWTOPTIONS_SECRET;
 const Amplitude = require('amplitude');
 let amplitude = new Amplitude(process.env.amplitudeApiKey);
+let User = require('./user');
 
 var userController = require("./userController");
 
@@ -37,7 +38,7 @@ passport.use(new GoogleStrategy({
                     done(null, user);
                     return;
                 } else {
-                    var user = new User({
+                    let user = new User({
                         oauthID: profile.id,
                         email: profile.email,
                         name: profile.displayName,
