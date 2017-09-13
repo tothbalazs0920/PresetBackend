@@ -60,7 +60,7 @@ var populatePreset = function (
     preset.pickupType = pickupType;
     preset.michrophonePosition = michrophonePosition;
     preset.michrophone = michrophone;
-    preset.created= Date.now()
+    preset.created = Date.now()
     return preset;
 }
 

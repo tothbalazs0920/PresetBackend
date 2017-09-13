@@ -56,18 +56,7 @@ module.exports.findUser = function (email) {
     return query.exec();
 }
 
-module.exports.saveUser = function (oauthID, email, name, picture, familyName, givenName, language, gender) {
-    user = new User({
-        oauthID: oauthID,
-        email: email,
-        name: name,
-        picture: picture,
-        givenName: givenName,
-        familyName: familyName,
-        language: language,
-        gender: gender,
-        created: Date.now()
-    });
+module.exports.saveUser = function (user) {
     return user.save();
 }
 

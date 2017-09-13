@@ -115,4 +115,13 @@ module.exports = function (app) {
             });
     });
 
+    app.put('/api/preset/downloads', passport.authenticate('jwt', { session: false }), (req, res) => {
+        userController.updateDownloadedPresets(
+            req.body.presetId, req.user.email)
+            .then(
+            result => {
+                return res.json(result);
+            });
+    });
+
 }

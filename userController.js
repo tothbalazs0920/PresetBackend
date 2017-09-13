@@ -13,8 +13,8 @@ module.exports.getUser = function (email) {
         );
 }
 
-module.exports.saveUser = function (oauthID, email, name, picture, familyName, givenName, language, gender) {
-    return presetDao.saveUser(oauthID, email, name, picture, familyName, givenName, language, gender)
+module.exports.saveUser = function (user) {
+    return presetDao.saveUser(user)
         .then(
         result => {
             let data = {
@@ -22,6 +22,19 @@ module.exports.saveUser = function (oauthID, email, name, picture, familyName, g
                 userId: email,
             };
             amplitude.track(data);
+            return result;
+        }
+        ).catch(
+        err => console.log(err)
+        );
+}
+
+module.exports.updateDownloadedPresets = function (presetId, email) {
+    presetDao.findUser(email)
+        .then((user) => {
+            user.updateDownloadedPresets.push(presetId);
+            return presetDao.saveUser(user);
+        }).then(result => {
             return result;
         }
         ).catch(

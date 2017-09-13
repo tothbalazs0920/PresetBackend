@@ -37,8 +37,18 @@ passport.use(new GoogleStrategy({
                     done(null, user);
                     return;
                 } else {
-                    console.log('profile', profile);
-                    return userController.saveUser(profile.id, profile.email, profile.displayName, profile.photos[0].value, profile.name.familyName, profile.name.givenName, profile.language, profile.gender);
+                    var user = new User({
+                        oauthID: profile.id,
+                        email: profile.email,
+                        name: profile.displayName,
+                        picture: profile.photos[0].value,
+                        givenName: profile.name.givenName,
+                        familyName: profile.name.familyName,
+                        language: profile.language,
+                        gender: profile.gender,
+                        created: Date.now()
+                    });
+                    return userController.saveUser(user);
                 }
             })
             .then(function (result) {

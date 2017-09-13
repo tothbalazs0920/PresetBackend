@@ -12,7 +12,8 @@ var userSchema = new Schema({
   language: String, 
   gender: String,
   created: Date,
-  presetsIds: { type : Array , "default" : [] }
+  presetsIds: { type : Array , "default" : [] },
+  downLoadedPresetsIds: { type : Array , "default" : [] }
 });
 
 let user = mongoose.model('User', userSchema);
