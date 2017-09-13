@@ -5,4 +5,5 @@ env.json
 /build
 npm-debug.log
 .env
+.envDevelopment
 /.vscode
