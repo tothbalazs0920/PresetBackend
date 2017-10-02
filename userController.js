@@ -30,10 +30,25 @@ module.exports.saveUser = function (user) {
 }
 
 module.exports.updateDownloadedPresets = function (presetId, email) {
-    presetDao.findUser(email)
+    return presetDao.findUser(email)
         .then((user) => {
-            user.updateDownloadedPresets.push(presetId);
+            if (!user.downLoadedPresetsIds.includes(presetId)) {
+                user.downLoadedPresetsIds.push(presetId);
+                console.log("updated user: ", user);
+            }
             return presetDao.saveUser(user);
+        }).then(result => {
+            return result;
+        }
+        ).catch(
+        err => console.log(err)
+        );
+}
+
+module.exports.getDownloadedPresets = function (email) {
+    return presetDao.findUser(email)
+        .then((user) => {
+            return presetDao.findDownloadedPresets(user.downLoadedPresetsIds);
         }).then(result => {
             return result;
         }
