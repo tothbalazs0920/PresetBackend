@@ -32,6 +32,12 @@ module.exports.findPresetList = function (page, perPage, callback) {
         });
 }
 
+module.exports.findDownloadedPresets = function (downLoadedPresetsIds) {
+    return Preset
+        .find({_id: { $in : downLoadedPresetsIds }})
+        .exec();
+}
+
 module.exports.findPresetsById = function (id) {
     return Preset.findOne({ '_id': id }).exec();
 }
