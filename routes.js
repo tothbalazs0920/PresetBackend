@@ -11,6 +11,7 @@ jwtOptions.secretOrKey = process.env.JWTOPTIONS_SECRET;
 var authentication = require('./authentication');
 var passport = authentication.getPassport();
 const awsService = require('./awsService');
+const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
 module.exports = function (app) {
     app.use(passport.initialize());
@@ -46,7 +47,8 @@ module.exports = function (app) {
             req.body._id, req.body.name, req.body.description, req.body.technology, req.user.email, req.user.name, req.user.picture,
             req.body.audioFileId, req.body.originalAudoFileName, req.body.presetId, req.body.originalPerestFileName,
             req.body.amp, req.body.cabinet, req.body.author, req.body.album, req.body.songTitle, req.body.imageFileId, req.body.originalImageFileName,
-            req.body.youtubeUrl, req.body.ampChannel, req.body.pickupType, req.body.michrophonePosition, req.body.michrophone)
+            req.body.youtubeUrl, req.body.ampChannel, req.body.pickupType, req.body.michrophonePosition, req.body.michrophone,
+            req.body.price, req.body.currency)
             .then(
             result => {
                 return res.json(result);
@@ -116,7 +118,6 @@ module.exports = function (app) {
     });
 
     app.put('/api/user/downloads', passport.authenticate('jwt', { session: false }), (req, res) => {
-        console.log("put downloads");
         userController.updateDownloadedPresets(
             req.body.presetId, req.body.email)
             .then(
@@ -126,12 +127,60 @@ module.exports = function (app) {
     });
 
     app.get('/api/mydownloads', passport.authenticate('jwt', { session: false }), (req, res) => {
-        console.log("get downloads");
         userController.getDownloadedPresets(req.user.email)
             .then(
             result => {
                 return res.json(result);
-            });  
+            });
+    });
+
+    app.post('/api/stripepayment', passport.authenticate('jwt', { session: false }), (req, res) => {
+        let token = req.body.tokenId;
+        let presetId = req.body.presetId;
+        let amount = req.body.amount;
+        let currency = req.body.currency;
+        let presetUploaderEmail = req.body.presetUploaderEmail;
+        console.log('presetUploaderEmail: ', presetUploaderEmail);
+        userController.getUser(presetUploaderEmail)
+            .then((user) => {
+                console.log('presetUploader stripeUserId: ', user.stripeUserId);
+                return stripe.charges.create({
+                    amount: amount,
+                    currency: currency,
+                    description: presetId,
+                    source: token,
+                    application_fee: amount / 10,
+                }, {
+                        stripe_account: user.stripeUserId
+                    }).then((charge) => {
+                        userController.updateDownloadedPresets(
+                            req.body.presetId, req.user.email)
+                            .then((result) => {
+                                return res.json(result);
+                            }).catch((error) => {
+                                return res.json(error);
+                            });
+                    });
+
+            });
+    });
+
+    app.get('/api/stripe', passport.authenticate('jwt', { session: false }), (req, res) => {
+        userController.getUser(req.user.email)
+            .then((user) => {
+                if (user.stripeUserId) {
+                    return res.json(true);
+                }
+                return res.json(false);
+            });
+    });
+
+    app.post('/api/stripe', passport.authenticate('jwt', { session: false }), (req, res) => {
+        console.log('post api/stripe ', req.user.email, req.body.stripeCode);
+        userController.saveStripeUserId(req.user.email, req.body.stripeCode)
+            .then((result) => {
+                return res.json(result);
+            });
     });
 
 }

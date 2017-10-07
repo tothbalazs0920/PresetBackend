@@ -13,7 +13,8 @@ var userSchema = new Schema({
   gender: String,
   created: Date,
   presetsIds: { type : Array , "default" : [] },
-  downLoadedPresetsIds: { type : Array , "default" : [] }
+  downLoadedPresetsIds: { type : Array , "default" : [] },
+  stripeUserId: String
 });
 
 let user = mongoose.model('User', userSchema);

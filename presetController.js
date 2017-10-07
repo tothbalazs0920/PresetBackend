@@ -36,7 +36,7 @@ var populatePreset = function (
     preset, id, name, description, technology, email, presetAuthor, profilePicture,
     audioFileId, originalAudoFileName, presetId, originalPerestFileName,
     amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl,
-    ampChannel, pickupType, michrophonePosition, michrophone) {
+    ampChannel, pickupType, michrophonePosition, michrophone, price, currency) {
     preset.name = name;
     preset.description = description;
     preset.technology = technology;
@@ -60,6 +60,8 @@ var populatePreset = function (
     preset.pickupType = pickupType;
     preset.michrophonePosition = michrophonePosition;
     preset.michrophone = michrophone;
+    preset.price = price;
+    preset.currency = currency;
     preset.created = Date.now()
     return preset;
 }
@@ -67,7 +69,7 @@ var populatePreset = function (
 module.exports.updatePreset = function (id, name, description, technology, email, presetAuthor, profilePicture,
     audioFileId, originalAudioFileName, presetId, originalPresetFileName,
     amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl,
-    ampChannel, pickupType, michrophonePosition, michrophone) {
+    ampChannel, pickupType, michrophonePosition, michrophone, price, currency) {
     var presetInstance = new Preset();
     return presetDao.findPresetsById(id)
         .then(result => {
@@ -77,7 +79,7 @@ module.exports.updatePreset = function (id, name, description, technology, email
             presetInstance = populatePreset(presetInstance, id, name, description, technology, email, presetAuthor, profilePicture,
                 audioFileId, originalAudioFileName, presetId, originalPresetFileName,
                 amp, cabinet, author, album, songTitle, imageFileId, originalImageFileName, youtubeUrl,
-                ampChannel, pickupType, michrophonePosition, michrophone);
+                ampChannel, pickupType, michrophonePosition, michrophone, price, currency);
             return presetDao.savePreset(presetInstance);
         }).then(
         result => {
