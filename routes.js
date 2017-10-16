@@ -19,6 +19,10 @@ module.exports = function (app) {
     app.get('/api/health-check', (req, res) => {
         return res.json('Ok');
     });
+    
+    app.get('/api/async', async (req, res) => {
+        return res.json('Ok');
+    });
 
     app.get('/api/presetList', function (req, res) {
         var perPage = 6;
@@ -134,36 +138,32 @@ module.exports = function (app) {
             });
     });
 
-    app.post('/api/stripepayment', passport.authenticate('jwt', { session: false }), (req, res) => {
+    app.post('/api/stripepayment', passport.authenticate('jwt', { session: false }), async (req, res) => {
         let token = req.body.tokenId;
         let presetId = req.body.presetId;
         let amount = req.body.amount;
         let currency = req.body.currency;
         let presetUploaderEmail = req.body.presetUploaderEmail;
-        console.log('presetUploaderEmail: ', presetUploaderEmail);
-        userController.getUser(presetUploaderEmail)
-            .then((user) => {
-                console.log('presetUploader stripeUserId: ', user.stripeUserId);
-                return stripe.charges.create({
-                    amount: amount,
-                    currency: currency,
-                    description: "Charge for " + presetId,
-                    receipt_email: req.user.email,
-                    source: token,
-                    application_fee: amount / 10,
-                }, {
-                        stripe_account: user.stripeUserId
-                    }).then((charge) => {
-                        userController.updateDownloadedPresets(
-                            req.body.presetId, req.user.email)
-                            .then((result) => {
-                                return res.json(result);
-                            }).catch((error) => {
-                                return res.json(error);
-                            });
-                    });
-
+        let result;
+        try {
+        let user = await userController.getUser(presetUploaderEmail);
+        let charge = await stripe.charges.create({
+            amount: amount,
+            currency: currency,
+            description: "Charge for " + presetId,
+            receipt_email: req.user.email,
+            source: token,
+            application_fee: amount / 10
+        }, {
+                stripe_account: user.stripeUserId
             });
+        result = await userController.updateDownloadedPresets(req.body.presetId, req.user.email);
+        } catch(error) {
+            console.log(error);
+            res.status(500);
+            return res.json(error);
+        }
+        return res.json(result);
     });
 
     app.get('/api/stripe', passport.authenticate('jwt', { session: false }), (req, res) => {

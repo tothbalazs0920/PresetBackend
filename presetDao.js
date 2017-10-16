@@ -57,13 +57,13 @@ module.exports.deletePreset = function (id) {
         });
 }
 
-module.exports.findUser = function (email) {
+module.exports.findUser = async function (email) {
     var query = User.findOne({ email: email });
-    return query.exec();
+    return await query.exec();
 }
 
-module.exports.saveUser = function (user) {
-    return user.save();
+module.exports.saveUser = async function (user) {
+    return await user.save();
 }
 
 module.exports.searchPresets = function (terms) {

@@ -1,2 +1,2 @@
 web: node --optimize_for_size --max_old_space_size=460 --gc_interval=100 server.js
-webDebug: node --debug-brk=5858 server.js
+webDebug: node --inspect-brk=5858 server.js
