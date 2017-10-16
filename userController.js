@@ -3,15 +3,14 @@ const Amplitude = require('amplitude');
 let amplitude = new Amplitude(process.env.amplitudeApiKey);
 let request = require('request-promise');
 
-module.exports.getUser = function (email) {
-    return presetDao.findUser(email)
-        .then(
-        user => {
-            return user;
-        }
-        ).catch(
-        err => console.log(err)
-        );
+module.exports.getUser = async function (email) {
+    let user;
+    try {
+        user = await presetDao.findUser(email);
+    } catch (error) {
+        console.log(error);
+    }
+    return user;
 }
 
 module.exports.saveUser = function (user) {
@@ -30,19 +29,14 @@ module.exports.saveUser = function (user) {
         );
 }
 
-module.exports.updateDownloadedPresets = function (presetId, email) {
-    return presetDao.findUser(email)
-        .then((user) => {
-            if (!user.downLoadedPresetsIds.includes(presetId)) {
-                user.downLoadedPresetsIds.push(presetId);
-                console.log("updated user: ", user);
-            }
-            return presetDao.saveUser(user);
-        }).then((result) => {
-            return result;
-        }).catch(
-        (err) => console.log(err)
-        );
+module.exports.updateDownloadedPresets = async function (presetId, email) {
+    let user = await presetDao.findUser(email);
+    if (!user.downLoadedPresetsIds.includes(presetId)) {
+        user.downLoadedPresetsIds.push(presetId);
+        console.log("updated user: ", user);
+    }
+    let result = await presetDao.saveUser(user);
+    return result;
 }
 
 module.exports.getDownloadedPresets = function (email) {
