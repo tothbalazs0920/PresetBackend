@@ -147,7 +147,8 @@ module.exports = function (app) {
                 return stripe.charges.create({
                     amount: amount,
                     currency: currency,
-                    description: presetId,
+                    description: "Charge for " + presetId,
+                    receipt_email: req.user.email,
                     source: token,
                     application_fee: amount / 10,
                 }, {
