@@ -15,18 +15,15 @@ module.exports.getUser = async function (email) {
 
 module.exports.saveUser = function (user) {
     return presetDao.saveUser(user)
-        .then(
-        result => {
+        .then((result) => {
             let data = {
                 eventType: 'signup',
                 userId: email,
             };
             amplitude.track(data);
             return result;
-        }
-        ).catch(
-        err => console.log(err)
-        );
+        }).catch((err) => 
+        console.log(err));
 }
 
 module.exports.updateDownloadedPresets = async function (presetId, email) {
