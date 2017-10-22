@@ -77,8 +77,7 @@ module.exports = function (app) {
 
     app.post('/api/user/:email', function (req, res) {
         userController.saveUser('1234', req.params.email, 'profile.displayName')
-            .then(
-            result => {
+            .then((result) => {
                 return res.json(result);
             });
     });
