@@ -18,7 +18,7 @@ module.exports.saveUser = function (user) {
         .then((result) => {
             let data = {
                 eventType: 'signup',
-                userId: email,
+                userId: result.email,
             };
             amplitude.track(data);
             return result;
