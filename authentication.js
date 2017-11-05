@@ -21,12 +21,34 @@ passport.deserializeUser(function deserialize(obj, done) {
     done(null, obj);
 });
 
-passport.use(new GoogleStrategy({
+passport.use('google', new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.API_ROOT + '/auth/google/callback'
 },
     function (request, accessToken, refreshToken, profile, done) {
+        return userController.getUser(profile.email)
+            .then(function (user) {
+                if (user !== null) {
+                    let data = {
+                        eventType: 'login',
+                        userId: user.email,
+                    };
+                    amplitude.track(data);
+                    done(null, user);
+                    return;
+                } else {
+                    done(null, null);
+                }
+            });
+    }));
+
+passport.use('google-signup', new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.API_ROOT + '/signup/google/callback'
+},
+    function (request, accessToken, refreshToken, profile, done) {  
         return userController.getUser(profile.email)
             .then(function (user) {
                 if (user !== null) {
@@ -49,10 +71,14 @@ passport.use(new GoogleStrategy({
                         gender: profile.gender,
                         created: Date.now()
                     });
+                    let data = {
+                        eventType: 'signup',
+                        userId: user.email,
+                    };
+                    amplitude.track(data);
                     return userController.saveUser(user);
                 }
-            })
-            .then(function (result) {
+            }).then(function (result) {
                 if (result) {
                     console.log("saving user ...");
                     done(null, result);
@@ -60,10 +86,9 @@ passport.use(new GoogleStrategy({
             });
     }));
 
-var strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
+let strategy = new JwtStrategy(jwtOptions, function (jwt_payload, next) {
     userController.getUser(jwt_payload.email)
-        .then(
-        user => {
+        .then((user) => {
             if (user) {
                 next(null, user);
             } else {

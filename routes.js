@@ -19,10 +19,6 @@ module.exports = function (app) {
     app.get('/api/health-check', (req, res) => {
         return res.json('Ok');
     });
-    
-    app.get('/api/async', async (req, res) => {
-        return res.json('Ok');
-    });
 
     app.get('/api/presetList', function (req, res) {
         var perPage = 6;
@@ -82,8 +78,18 @@ module.exports = function (app) {
             });
     });
 
+    app.get('/signup/google', passport.authenticate('google-signup', {
+        failureRedirect: process.env.FRONTEND_URL + '/error',
+        scope: [
+            'https://www.googleapis.com/auth/plus.login',
+            'https://www.googleapis.com/auth/plus.profile.emails.read'
+        ]
+    }), function (req, res) {
+        res.redirect(process.env.FRONTEND_URL + '/presets?token=' + '');
+    });
+
     app.get('/auth/google', passport.authenticate('google', {
-        failureRedirect: process.env.FRONTEND_URL,
+        failureRedirect: process.env.FRONTEND_URL + '/error',
         scope: [
             'https://www.googleapis.com/auth/plus.login',
             'https://www.googleapis.com/auth/plus.profile.emails.read'
@@ -94,11 +100,24 @@ module.exports = function (app) {
 
     // handle google callback
     app.get('/auth/google/callback', passport.authenticate('google', {
-        failureRedirect: process.env.FRONTEND_URL
+        failureRedirect: process.env.FRONTEND_URL + '/login',
     }),
         function (req, res) {
-            var payload = { email: req.user.email };
-            var token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
+            if(!req.user) {
+                res.redirect(process.env.FRONTEND_URL + '/login');
+                return;
+            }
+            let payload = { email: req.user.email };
+            let token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
+            res.redirect(process.env.FRONTEND_URL + '/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
+        });
+
+    app.get('/signup/google/callback', passport.authenticate('google-signup', {
+        failureRedirect: process.env.FRONTEND_URL + '/error',
+    }),
+        function (req, res) {
+            let payload = { email: req.user.email };
+            let token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
             res.redirect(process.env.FRONTEND_URL + '/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
         });
 
@@ -145,19 +164,19 @@ module.exports = function (app) {
         let presetUploaderEmail = req.body.presetUploaderEmail;
         let result;
         try {
-        let user = await userController.getUser(presetUploaderEmail);
-        let charge = await stripe.charges.create({
-            amount: amount,
-            currency: currency,
-            description: "Charge for " + presetId,
-            receipt_email: req.user.email,
-            source: token,
-            application_fee: amount / 10
-        }, {
-                stripe_account: user.stripeUserId
-            });
-        result = await userController.updateDownloadedPresets(req.body.presetId, req.user.email);
-        } catch(error) {
+            let user = await userController.getUser(presetUploaderEmail);
+            let charge = await stripe.charges.create({
+                amount: amount,
+                currency: currency,
+                description: "Charge for " + presetId,
+                receipt_email: req.user.email,
+                source: token,
+                application_fee: amount / 10
+            }, {
+                    stripe_account: user.stripeUserId
+                });
+            result = await userController.updateDownloadedPresets(req.body.presetId, req.user.email);
+        } catch (error) {
             console.log(error);
             res.status(500);
             return res.json(error);
