@@ -79,17 +79,17 @@ module.exports = function (app) {
     });
 
     app.get('/signup/google', passport.authenticate('google-signup', {
-        failureRedirect: process.env.FRONTEND_URL + '/#!/error',
+        failureRedirect: process.env.FRONTEND_URL + '/error',
         scope: [
             'https://www.googleapis.com/auth/plus.login',
             'https://www.googleapis.com/auth/plus.profile.emails.read'
         ]
     }), function (req, res) {
-        res.redirect(process.env.FRONTEND_URL + '/#!/presets?token=' + '');
+        res.redirect(process.env.FRONTEND_URL + '/presets?token=' + '');
     });
 
     app.get('/auth/google', passport.authenticate('google', {
-        failureRedirect: process.env.FRONTEND_URL + '/#!/error',
+        failureRedirect: process.env.FRONTEND_URL + '/error',
         scope: [
             'https://www.googleapis.com/auth/plus.login',
             'https://www.googleapis.com/auth/plus.profile.emails.read'
@@ -100,25 +100,25 @@ module.exports = function (app) {
 
     // handle google callback
     app.get('/auth/google/callback', passport.authenticate('google', {
-        failureRedirect: process.env.FRONTEND_URL + '/#!/login',
+        failureRedirect: process.env.FRONTEND_URL + '/login',
     }),
         function (req, res) {
             if(!req.user) {
-                res.redirect(process.env.FRONTEND_URL + '/#!/login');
+                res.redirect(process.env.FRONTEND_URL + '/login');
                 return;
             }
             let payload = { email: req.user.email };
             let token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
-            res.redirect(process.env.FRONTEND_URL + '/#!/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
+            res.redirect(process.env.FRONTEND_URL + '/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
         });
 
     app.get('/signup/google/callback', passport.authenticate('google-signup', {
-        failureRedirect: process.env.FRONTEND_URL + '/#!/error',
+        failureRedirect: process.env.FRONTEND_URL + '/error',
     }),
         function (req, res) {
             let payload = { email: req.user.email };
             let token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: '1h' });
-            res.redirect(process.env.FRONTEND_URL + '/#!/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
+            res.redirect(process.env.FRONTEND_URL + '/presets?pageNumber=1&searchTerm=&previouslySearchedTerm=&token=' + token);
         });
 
     app.get('/api/sign-s3', (req, res) => {
